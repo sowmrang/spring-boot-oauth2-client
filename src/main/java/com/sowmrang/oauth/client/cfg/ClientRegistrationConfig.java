@@ -1,4 +1,4 @@
-package com.bitkiva.fpd.client.cfg;
+package com.sowmrang.oauth.client.cfg;
 
 import lombok.Getter;
 import lombok.Setter;

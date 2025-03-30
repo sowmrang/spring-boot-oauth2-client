@@ -1,4 +1,4 @@
-package com.bitkiva.fpd.client.cfg;
+package com.sowmrang.oauth.client.cfg;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -14,17 +14,12 @@ public class OAuth2ClientConfig {
 
     @Bean
     protected ClientRegistrationRepository clientRegistrationRepository(ClientRegistrationConfig config) {
-        ClientRegistration kcClient = ClientRegistration.withRegistrationId(config.getId())
-                .clientId("testclient").clientSecret("--")
-                .issuerUri("")
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .tokenUri("http://localhost:8080")
-                .build();
-        return new InMemoryClientRegistrationRepository(kcClient);
+        return new InMemoryClientRegistrationRepository(
+                ClientRegistration.withClientRegistration(config.getClientRegistration()).build());
     }
 
     @Bean
-    @ConfigurationProperties(prefix="spring.security.oauth2.client.registration")
+    @ConfigurationProperties(prefix = "spring.security.oauth2.client.registration.keycloak")
     ClientRegistrationConfig getClientRegistration() {
         return new ClientRegistrationConfig();
     }

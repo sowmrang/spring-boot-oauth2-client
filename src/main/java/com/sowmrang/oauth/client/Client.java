@@ -1,6 +1,6 @@
-package com.bitkiva.fpd.client;
+package com.sowmrang.oauth.client;
 
-import com.bitkiva.fpd.client.cfg.OAuth2ClientConfig;
+import com.sowmrang.oauth.client.cfg.OAuth2ClientConfig;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -49,7 +49,6 @@ public class Client implements CommandLineRunner {
             public Response intercept(@NotNull Chain chain) throws IOException {
                 OAuth2AuthorizedClient client = oauth2Client.
                         authorize(OAuth2AuthorizeRequest.withClientRegistrationId(CLIENT_REGN_ID).principal("urs").build());
-                System.out.println("client = "+client);
                 Request.Builder requestBuilder = chain.request().newBuilder();
                 String tokenValue = null;
                 if (client == null) {
