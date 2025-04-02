@@ -1,5 +1,6 @@
 package com.sowmrang.oauth.client;
 
+import com.sowmrang.oauth.client.cfg.ClientRegistrationConfig;
 import com.sowmrang.oauth.client.cfg.OAuth2ClientConfig;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Interceptor;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpResponse;
@@ -30,7 +32,8 @@ public class Client implements CommandLineRunner {
     private final OAuth2AuthorizedClientManager oauth2Client;
     private static final String CLIENT_REGN_ID = "keycloak";
 
-    public Client(@Qualifier("oauthClientManager") OAuth2AuthorizedClientManager client) {
+    public Client(
+            @Qualifier("oauthClientManager") OAuth2AuthorizedClientManager client) {
         this.oauth2Client = client;
     }
 
@@ -47,6 +50,7 @@ public class Client implements CommandLineRunner {
             @NotNull
             @Override
             public Response intercept(@NotNull Chain chain) throws IOException {
+                //todo:populate the principal properly
                 OAuth2AuthorizedClient client = oauth2Client.
                         authorize(OAuth2AuthorizeRequest.withClientRegistrationId(CLIENT_REGN_ID).principal("urs").build());
                 Request.Builder requestBuilder = chain.request().newBuilder();
