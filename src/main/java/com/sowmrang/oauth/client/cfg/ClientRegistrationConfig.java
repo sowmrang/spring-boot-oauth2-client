@@ -21,9 +21,6 @@ public class ClientRegistrationConfig {
     private String registrationId;
     private String clientId;
     private String clientSecret;
-    private String authorizationUri;
-    private String tokenUri;
-    private String jwkSetUri;
     private String[] scopes;
 
     public ClientRegistration asClientRegistration(ProviderDetailConfig config) {
