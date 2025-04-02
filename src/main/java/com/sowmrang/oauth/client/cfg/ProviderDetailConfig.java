@@ -14,5 +14,4 @@ public class ProviderDetailConfig {
     private String tokenUri;
     private String jwtSetUri;
 
-
 }
