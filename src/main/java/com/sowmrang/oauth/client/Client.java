@@ -1,6 +1,5 @@
 package com.sowmrang.oauth.client;
 
-import com.sowmrang.oauth.client.cfg.ClientRegistrationConfig;
 import com.sowmrang.oauth.client.cfg.OAuth2ClientConfig;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Interceptor;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpResponse;
@@ -31,6 +29,7 @@ public class Client implements CommandLineRunner {
 
     private final OAuth2AuthorizedClientManager oauth2Client;
     private static final String CLIENT_REGN_ID = "keycloak";
+    private static final String REQUEST_URI = "http://localhost:9000/";
 
     public Client(
             @Qualifier("oauthClientManager") OAuth2AuthorizedClientManager client) {
@@ -50,20 +49,23 @@ public class Client implements CommandLineRunner {
             @NotNull
             @Override
             public Response intercept(@NotNull Chain chain) throws IOException {
-                //todo:populate the principal properly
                 OAuth2AuthorizedClient client = oauth2Client.
-                        authorize(OAuth2AuthorizeRequest.withClientRegistrationId(CLIENT_REGN_ID).principal("urs").build());
+                        authorize(OAuth2AuthorizeRequest.withClientRegistrationId(CLIENT_REGN_ID)
+                                .principal("anonymous")
+                                .build());
                 Request.Builder requestBuilder = chain.request().newBuilder();
                 String tokenValue = null;
                 if (client == null) {
-                    System.err.println("Unable to fetch access token");
+                    log.error("Unknown error with OAuth client. Client is null");
+                    throw new RuntimeException("Unknown error. client is null");
                 } else tokenValue = client.getAccessToken().getTokenValue();
+                log.info("Access token obtained successfully");
                 if (tokenValue != null) requestBuilder.addHeader("Authorization", tokenValue);
                 return chain.proceed(requestBuilder.build());
             }
         }).build();
         OkHttp3ClientHttpRequestFactory requestFactory = new OkHttp3ClientHttpRequestFactory(httpClient);
-        ClientHttpResponse response = requestFactory.createRequest(URI.create("http://localhost:9000"), HttpMethod.GET).execute();
+        ClientHttpResponse response = requestFactory.createRequest(URI.create(REQUEST_URI), HttpMethod.GET).execute();
         response.close();
     }
 }
