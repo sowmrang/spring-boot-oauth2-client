@@ -13,24 +13,17 @@ import java.security.Provider;
 import java.util.*;
 
 
-@Setter
-@Getter
-@Configuration
 @ConfigurationProperties(prefix = "spring.security.oauth2.client.registration.keycloak")
-public class ClientRegistrationConfig {
-    private String registrationId;
-    private String clientId;
-    private String clientSecret;
-    private String[] scopes;
+public record ClientRegistrationConfig(String registrationId,String clientId,String clientSecret,String[] scopes) {
 
     public ClientRegistration asClientRegistration(ProviderDetailConfig config) {
 
         return ClientRegistration.withRegistrationId(registrationId)
                 .clientId(clientId).clientSecret(clientSecret)
                 .scope(scopes)
-                .tokenUri(config.getTokenUri())
-                .authorizationUri(config.getAuthorizationUri())
-                .jwkSetUri(config.getJwtSetUri())
+                .tokenUri(config.tokenUri())
+                .authorizationUri(config.authorizationUri())
+                .jwkSetUri(config.jwkSetUri())
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS).build();
     }
 }

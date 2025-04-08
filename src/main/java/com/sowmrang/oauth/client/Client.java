@@ -1,6 +1,8 @@
 package com.sowmrang.oauth.client;
 
+import com.sowmrang.oauth.client.cfg.ClientRegistrationConfig;
 import com.sowmrang.oauth.client.cfg.OAuth2ClientConfig;
+import com.sowmrang.oauth.client.cfg.ProviderDetailConfig;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpResponse;
@@ -25,6 +28,7 @@ import java.net.URI;
 @Import(OAuth2ClientConfig.class)
 @SpringBootApplication
 @Slf4j
+@EnableConfigurationProperties({ProviderDetailConfig.class, ClientRegistrationConfig.class})
 public class Client implements CommandLineRunner {
 
     private final OAuth2AuthorizedClientManager oauth2Client;
